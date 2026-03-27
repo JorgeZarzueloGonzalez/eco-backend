@@ -70,6 +70,44 @@ docker run -d \
   eco-backend:latest
 ```
 
+### Ejemplo: Docker Compose (PostgreSQL + backend)
+
+```yaml
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U eco -d eco"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    environment:
+      POSTGRES_USER: eco
+      POSTGRES_PASSWORD: eco
+      POSTGRES_DB: eco
+    ports:
+      - "5432:5432"
+    volumes:
+      - D:/docker/eco/data/postgres:/var/lib/postgresql/data
+
+  eco-backend:
+    image: eco-backend:latest
+    restart: unless-stopped
+    environment:
+      DB_URL: jdbc:postgresql://db:5432/eco
+      DB_USER: eco
+      DB_PASS: eco
+    ports:
+      - "8080:8080"
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - D:/docker/eco/data/music/library:/app/music/library
+      - D:/docker/eco/data/music/raw:/app/music/raw
+```
+
 ## 📁 Estructura del Proyecto
 
 ```
