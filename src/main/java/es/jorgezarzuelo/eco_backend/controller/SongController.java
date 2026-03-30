@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import es.jorgezarzuelo.eco_backend.dto.SongDetailDto;
-import es.jorgezarzuelo.eco_backend.dto.SongListDto;
+import es.jorgezarzuelo.eco_backend.dto.song.SongDetailDto;
+import es.jorgezarzuelo.eco_backend.dto.song.SongListDto;
 import es.jorgezarzuelo.eco_backend.service.SongService;
 
 //Spring Core

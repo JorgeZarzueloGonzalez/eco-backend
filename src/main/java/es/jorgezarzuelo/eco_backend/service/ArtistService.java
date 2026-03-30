@@ -4,9 +4,9 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import es.jorgezarzuelo.eco_backend.dto.ArtistDetailDto;
-import es.jorgezarzuelo.eco_backend.dto.ArtistListDto;
-import es.jorgezarzuelo.eco_backend.dto.ArtistSongDto;
+import es.jorgezarzuelo.eco_backend.dto.artist.ArtistDetailDto;
+import es.jorgezarzuelo.eco_backend.dto.artist.ArtistListDto;
+import es.jorgezarzuelo.eco_backend.dto.artist.ArtistSongDto;
 import es.jorgezarzuelo.eco_backend.model.Song;
 import es.jorgezarzuelo.eco_backend.repository.ArtistRepository;
 import jakarta.persistence.EntityNotFoundException;

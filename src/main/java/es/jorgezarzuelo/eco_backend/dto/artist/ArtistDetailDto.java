@@ -1,4 +1,4 @@
-package es.jorgezarzuelo.eco_backend.dto;
+package es.jorgezarzuelo.eco_backend.dto.artist;
 
 import java.util.List;
 

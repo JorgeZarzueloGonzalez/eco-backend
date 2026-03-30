@@ -10,9 +10,9 @@ import org.springframework.stereotype.Service;
 import com.mpatric.mp3agic.ID3v2;
 import com.mpatric.mp3agic.Mp3File;
 
-import es.jorgezarzuelo.eco_backend.dto.ArtistSummaryDto;
-import es.jorgezarzuelo.eco_backend.dto.SongDetailDto;
-import es.jorgezarzuelo.eco_backend.dto.SongListDto;
+import es.jorgezarzuelo.eco_backend.dto.artist.ArtistSummaryDto;
+import es.jorgezarzuelo.eco_backend.dto.song.SongDetailDto;
+import es.jorgezarzuelo.eco_backend.dto.song.SongListDto;
 import es.jorgezarzuelo.eco_backend.model.Artist;
 import es.jorgezarzuelo.eco_backend.model.Song;
 import es.jorgezarzuelo.eco_backend.repository.SongRepository;

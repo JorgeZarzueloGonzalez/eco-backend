@@ -3,8 +3,8 @@ package es.jorgezarzuelo.eco_backend.controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import es.jorgezarzuelo.eco_backend.dto.ArtistDetailDto;
-import es.jorgezarzuelo.eco_backend.dto.ArtistListDto;
+import es.jorgezarzuelo.eco_backend.dto.artist.ArtistDetailDto;
+import es.jorgezarzuelo.eco_backend.dto.artist.ArtistListDto;
 import es.jorgezarzuelo.eco_backend.service.ArtistService;
 
 import java.util.List;
