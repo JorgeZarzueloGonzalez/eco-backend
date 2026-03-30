@@ -9,6 +9,7 @@ Eco Backend proporciona una API REST para:
 - **Descargar música** desde YouTube usando URL
 - **Procesar archivos de audio** (conversión a MP3, extracción de metadatos)
 - **Gestionar una biblioteca musical** con metadatos
+- **Gestionar álbumes** y sus portadas
 - **Procesar listas de reproducción** de YouTube
 - **Consultar artistas** y sus canciones
 
@@ -52,6 +53,7 @@ Cuando ejecutes el contenedor Docker, puedes configurar las siguientes variables
 |----------|-------------|-------------------|
 | `APP_LIBRARY_PATH` | Ruta donde se almacenan las canciones procesadas | `./music/library/` |
 | `APP_RAW_PATH` | Ruta donde se descargan las canciones sin procesar | `./music/raw/` |
+| `APP_COVER_PATH` | Ruta donde se almacenan las portadas de álbumes | `./music/covers/` |
 | `DB_URL` | URL de conexión a la base de datos | `jdbc:postgresql://localhost:5432/eco` |
 | `DB_USER` | Usuario de la base de datos | `eco` |
 | `DB_PASS` | Contraseña de la base de datos | `eco` |
@@ -63,6 +65,7 @@ Cuando ejecutes el contenedor Docker, puedes configurar las siguientes variables
 docker run -d \
   -e APP_LIBRARY_PATH=/app/music/library \
   -e APP_RAW_PATH=/app/music/raw \
+  -e APP_COVER_PATH=/app/music/covers \
   -e DB_URL=jdbc:mysql://mysql:3306/eco_db \
   -e DB_USER=admin \
   -e DB_PASS=securepassword \
@@ -70,6 +73,7 @@ docker run -d \
   -p 8080:8080 \
   -v /data/music/library:/app/music/library \
   -v /data/music/raw:/app/music/raw \
+  -v /data/music/covers:/app/music/covers \
   eco-backend:latest
 ```
 
@@ -98,6 +102,7 @@ services:
     image: jorgezarzuelo/eco-backend:latest
     restart: unless-stopped
     environment:
+      APP_COVER_PATH: /app/music/covers
       DB_URL: jdbc:postgresql://db:5432/eco
       DB_USER: eco
       DB_PASS: eco
@@ -109,6 +114,7 @@ services:
     volumes:
       - D:/docker/eco/data/music/library:/app/music/library
       - D:/docker/eco/data/music/raw:/app/music/raw
+      - D:/docker/eco/data/music/covers:/app/music/covers
 ```
 
 ## 📁 Estructura del Proyecto
@@ -136,12 +142,17 @@ src/
 - `POST /api/download?url={youtube_url}` - Descargar canción/lista desde YouTube y procesar
 - `GET /api/artists` - Obtener lista de artistas
 - `GET /api/artists/{id}` - Obtener detalle de artista y canciones asociadas
+- `GET /api/albums` - Obtener lista de álbumes
+- `GET /api/albums/{id}` - Obtener detalle de álbum y canciones
+- `GET /api/albums/{id}/cover` - Obtener portada de álbum
 
-### DTOs principales añadidos para artistas
+### DTOs principales de artistas y álbumes
 
 - `ArtistListDto`: `id`, `name`
-- `ArtistDetailDto`: `id`, `name`, `songs[]`
-- `ArtistSongDto`: `id`, `title`, `album`
+- `ArtistDetailDto`: `id`, `name`, `ownAlbums[]`, `collaborationSongs[]`
+- `AlbumListDto`: `id`, `title`, `releaseYear`
+- `AlbumDetailDto`: `id`, `title`, `releaseYear`, `artist`, `songs[]`
+- `AlbumSummaryDto`: `id`, `title`, `releaseYear`, `artist`
 
 ## 📝 Configuración de la Base de Datos
 
@@ -159,6 +170,8 @@ spring.datasource.password=eco
 
 - Relación `ManyToMany` entre canciones y artistas (`song_artist`).
 - Cada canción guarda también un `mainArtist` para búsquedas/deduplicación rápida.
+- Cada canción pertenece a un álbum (`ManyToOne` con `album`).
+- Cada álbum pertenece a un artista (`ManyToOne` con `artist`) y contiene canciones (`OneToMany`).
 - Detección de duplicados por `title + mainArtist`.
 
 ## 🔧 Requisitos del Contenedor
@@ -178,6 +191,7 @@ Es recomendable montar volúmenes para persistencia:
 ```bash
 -v /ruta/local/library:/app/music/library
 -v /ruta/local/raw:/app/music/raw
+-v /ruta/local/covers:/app/music/covers
 ```
 
 ## 🔐 Notas de Seguridad
