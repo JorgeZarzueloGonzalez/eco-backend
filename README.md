@@ -128,9 +128,9 @@ src/
 
 ## 🔌 Endpoints Principales
 
-- `GET /api/songs` - Obtener lista de canciones
-- `POST /api/download` - Descargar canción desde YouTube
-- `GET /api/songs/{id}` - Obtener detalles de una canción
+- `GET /songs` - Obtener lista de canciones
+- `POST /download` - Descargar canción desde YouTube
+- `GET /songs/{id}` - Obtener detalles de una canción
 
 ## 📝 Configuración de la Base de Datos
 
