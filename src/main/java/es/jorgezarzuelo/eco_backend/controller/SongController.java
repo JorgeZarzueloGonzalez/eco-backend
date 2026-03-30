@@ -73,7 +73,7 @@ public class SongController {
     @GetMapping("/{id}/cover")
     public ResponseEntity<byte[]> getCover(@PathVariable Long id) throws Exception {
 
-        byte[] image = songService.getCover(id);
+        byte[] image = songService.getSongCover(id);
 
         return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG) // o detectar tipo dinámicamente
                 .body(image);

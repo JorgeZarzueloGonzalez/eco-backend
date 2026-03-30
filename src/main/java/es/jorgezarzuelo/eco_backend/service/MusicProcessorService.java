@@ -16,8 +16,10 @@ import org.springframework.transaction.annotation.Transactional;
 import com.mpatric.mp3agic.ID3v2;
 import com.mpatric.mp3agic.Mp3File;
 
+import es.jorgezarzuelo.eco_backend.model.Album;
 import es.jorgezarzuelo.eco_backend.model.Artist;
 import es.jorgezarzuelo.eco_backend.model.Song;
+import es.jorgezarzuelo.eco_backend.repository.AlbumRepository;
 import es.jorgezarzuelo.eco_backend.repository.ArtistRepository;
 import es.jorgezarzuelo.eco_backend.repository.SongRepository;
 
@@ -26,6 +28,7 @@ public class MusicProcessorService {
 
     private final SongRepository songRepository;
     private final ArtistRepository artistRepository;
+    private final AlbumRepository albumRepository;
 
     @Value("${app.raw.path}")
     private String rawPath;
@@ -33,9 +36,14 @@ public class MusicProcessorService {
     @Value("${app.library.path}")
     private String libraryPath;
 
-    public MusicProcessorService(SongRepository songRepository, ArtistRepository artistRepository) {
+    @Value("${app.cover.path}")
+    private String coversPath;
+
+    public MusicProcessorService(SongRepository songRepository, ArtistRepository artistRepository,
+            AlbumRepository albumRepository) {
         this.songRepository = songRepository;
         this.artistRepository = artistRepository;
+        this.albumRepository = albumRepository;
     }
 
     @Transactional
@@ -58,7 +66,8 @@ public class MusicProcessorService {
 
             String title = safe(tag.getTitle());
             String artistRaw = safe(tag.getArtist());
-            String album = safe(tag.getAlbum());
+            String albumRaw = safe(tag.getAlbum());
+            int releaseYear = safe(tag.getYear()).matches("\\d{4}") ? Integer.parseInt(tag.getYear()) : 0;
             int duration = (int) mp3.getLengthInSeconds();
 
             // Extraer artistas (antes de "feat.", "&", ",", etc.)
@@ -77,6 +86,25 @@ public class MusicProcessorService {
             }
 
             Artist mainArtist = artists.get(0); // Asumimos que el primer artista es el principal
+
+            // Comprobar si el álbum ya existe, si no crearlo y crear el archivo de portada
+            Album album;
+            if (albumRepository.existsByTitleIgnoreCaseAndArtist(albumRaw, mainArtist)) {
+                album = albumRepository.findByTitleIgnoreCaseAndArtist(albumRaw, mainArtist).orElse(null);
+            } else {
+                album = new Album();
+                album.setTitle(albumRaw);
+                album.setArtist(mainArtist);
+                album.setReleaseYear(releaseYear);
+                byte[] coverData = tag.getAlbumImage();
+                String mine = tag.getAlbumImageMimeType();
+                String coverFileName = String.format("%s-%s.%s", mainArtist.getName(), albumRaw, mine.split("/")[1]);
+                Path coverPath = Path.of(coversPath, sanitizeFileName(coverFileName));
+                Files.write(coverPath, coverData);
+                coverFileName = sanitizeFileName(coverFileName);
+                album.setCoverFilePath(coverFileName);
+                album = albumRepository.save(album);
+            }
 
             if (songRepository.existsByTitleIgnoreCaseAndMainArtist(title, mainArtist)) {
                 System.out.println("Duplicado detectado: " + title + " - " + mainArtist.getName());

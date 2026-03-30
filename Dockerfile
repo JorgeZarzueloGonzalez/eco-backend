@@ -1,10 +1,10 @@
 FROM eclipse-temurin:21-jdk-jammy
 
-RUN mkdir -p /app/music/raw /app/music/library
+RUN mkdir -p /app/music/raw /app/music/library /app/music/covers
 
 WORKDIR /app
 
-COPY target/eco_backend-0.0.2-SNAPSHOT.jar app.jar
+COPY target/eco_backend-0.0.3-SNAPSHOT.jar app.jar
 
 RUN apt-get update && apt-get install -y \
     ffmpeg \

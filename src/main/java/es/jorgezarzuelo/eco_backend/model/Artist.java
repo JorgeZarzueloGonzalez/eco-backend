@@ -9,6 +9,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 
@@ -25,6 +26,8 @@ public class Artist {
     private String name;
     @ManyToMany(mappedBy = "artists", fetch = FetchType.LAZY)
     private List<Song> songs = new ArrayList<>();
+    @OneToMany(mappedBy = "artist", fetch = FetchType.LAZY)
+    private List<Album> albums = new ArrayList<>();
 
     // Getters and setters
     public Long getId() {
@@ -49,6 +52,22 @@ public class Artist {
 
     public void setSongs(List<Song> songs) {
         this.songs = songs;
+    }
+
+    public List<Album> getAlbums() {
+        return albums;
+    }
+
+    public void setAlbums(List<Album> albums) {
+        this.albums = albums;
+    }
+
+    public void addSong(Song song) {
+        this.songs.add(song);
+    }
+
+    public void addAlbum(Album album) {
+        this.albums.add(album);
     }
 
 }

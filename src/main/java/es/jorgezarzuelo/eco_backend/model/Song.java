@@ -1,5 +1,6 @@
 package es.jorgezarzuelo.eco_backend.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.Entity;
@@ -29,12 +30,14 @@ public class Song {
     @JoinTable(name = "song_artist",
             joinColumns = @JoinColumn(name = "song_id"),
             inverseJoinColumns = @JoinColumn(name = "artist_id"))
-    private List<Artist> artists;
+    private List<Artist> artists = new ArrayList<>();
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "artist_id", nullable = false)
     private Artist mainArtist; // Para búsquedas rápidas
     private String artistCreditRaw;
-    private String album;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "album_id", nullable = false)
+    private Album album;
     private int duration; // Duration in seconds
     private String filePath;
 
@@ -82,11 +85,11 @@ public class Song {
         this.artistCreditRaw = artistCreditRaw;
     }
 
-    public String getAlbum() {
+    public Album getAlbum() {
         return album;
     }
 
-    public void setAlbum(String album) {
+    public void setAlbum(Album album) {
         this.album = album;
     }
 
