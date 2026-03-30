@@ -4,12 +4,13 @@ import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import es.jorgezarzuelo.eco_backend.model.Artist;
 import es.jorgezarzuelo.eco_backend.model.Song;
 
 public interface SongRepository extends JpaRepository<Song, Long> {
 
-    Optional<Song> findByTitleIgnoreCaseAndArtistIgnoreCase(String title, String artist);
+    Optional<Song> findByTitleIgnoreCaseAndMainArtist(String title, Artist mainArtist);
 
-    boolean existsByTitleIgnoreCaseAndArtistIgnoreCase(String title, String artist);
+    boolean existsByTitleIgnoreCaseAndMainArtist(String title, Artist mainArtist);
 
 }

@@ -1,15 +1,22 @@
 package es.jorgezarzuelo.eco_backend.model;
 
+import java.util.List;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
+import jakarta.persistence.FetchType; // <- importante
 
 @Entity
 @Table(name = "song", uniqueConstraints = {
-        @UniqueConstraint(columnNames = { "title", "artist" })
+        @UniqueConstraint(columnNames = { "title", "artist_id" })
 })
 public class Song {
 
@@ -18,12 +25,23 @@ public class Song {
     private Long id;
 
     private String title;
-    private String artist;
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "song_artist",
+            joinColumns = @JoinColumn(name = "song_id"),
+            inverseJoinColumns = @JoinColumn(name = "artist_id"))
+    private List<Artist> artists;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "artist_id", nullable = false)
+    private Artist mainArtist; // Para búsquedas rápidas
+    private String artistCreditRaw;
     private String album;
     private int duration; // Duration in seconds
     private String filePath;
 
-    // Constructors, getters, and setters
+    public Song() {
+    }
+
+    // Getters, and setters
     public Long getId() {
         return id;
     }
@@ -40,12 +58,28 @@ public class Song {
         this.title = title;
     }
 
-    public String getArtist() {
-        return artist;
+    public List<Artist> getArtists() {
+        return artists;
     }
 
-    public void setArtist(String artist) {
-        this.artist = artist;
+    public void setArtists(List<Artist> artists) {
+        this.artists = artists;
+    }
+
+    public Artist getMainArtist() {
+        return mainArtist;
+    }
+
+    public void setMainArtist(Artist mainArtist) {
+        this.mainArtist = mainArtist;
+    }
+
+    public String getArtistCreditRaw() {
+        return artistCreditRaw;
+    }
+
+    public void setArtistCreditRaw(String artistCreditRaw) {
+        this.artistCreditRaw = artistCreditRaw;
     }
 
     public String getAlbum() {

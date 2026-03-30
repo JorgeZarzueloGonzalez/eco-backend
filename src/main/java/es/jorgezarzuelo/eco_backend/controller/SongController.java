@@ -45,7 +45,7 @@ public class SongController {
 
     private static final long CHUNK_SIZE = 1024 * 1024; // 1MB
 
-    @GetMapping()
+    @GetMapping
     public List<SongListDto> getAllSongs() {
         return songService.getAllSongs();
     }

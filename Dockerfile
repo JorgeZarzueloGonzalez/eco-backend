@@ -4,7 +4,7 @@ RUN mkdir -p /app/music/raw /app/music/library
 
 WORKDIR /app
 
-COPY target/eco_backend-0.0.1-SNAPSHOT.jar app.jar
+COPY target/eco_backend-0.0.2-SNAPSHOT.jar app.jar
 
 RUN apt-get update && apt-get install -y \
     ffmpeg \

@@ -10,8 +10,10 @@ import org.springframework.stereotype.Service;
 import com.mpatric.mp3agic.ID3v2;
 import com.mpatric.mp3agic.Mp3File;
 
+import es.jorgezarzuelo.eco_backend.dto.ArtistSummaryDto;
 import es.jorgezarzuelo.eco_backend.dto.SongDetailDto;
 import es.jorgezarzuelo.eco_backend.dto.SongListDto;
+import es.jorgezarzuelo.eco_backend.model.Artist;
 import es.jorgezarzuelo.eco_backend.model.Song;
 import es.jorgezarzuelo.eco_backend.repository.SongRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -30,12 +32,13 @@ public class SongService {
 
     public List<SongListDto> getAllSongs() {
         return songRepository.findAll().stream()
-                .map(song -> new SongListDto(song.getId(), song.getTitle(), song.getArtist())).toList();
+                .map(song -> new SongListDto(song.getId(), song.getTitle(), mapToArtistsSummary(song.getArtists())))
+                .toList();
     }
 
     public SongDetailDto getSongById(Long id) {
         Song song = songRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Song not found"));
-        return new SongDetailDto(song.getId(), song.getTitle(), song.getArtist(), song.getAlbum(),
+        return new SongDetailDto(song.getId(), song.getTitle(), mapToArtistsSummary(song.getArtists()), song.getAlbum(),
                 song.getDuration());
     }
 
@@ -62,6 +65,12 @@ public class SongService {
         }
         return image;
 
+    }
+
+    private List<ArtistSummaryDto> mapToArtistsSummary(List<Artist> artists) {
+        return artists.stream()
+                .map(artist -> new ArtistSummaryDto(artist.getId(), artist.getName()))
+                .toList();
     }
 
 }
