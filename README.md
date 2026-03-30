@@ -10,15 +10,18 @@ Eco Backend proporciona una API REST para:
 - **Procesar archivos de audio** (conversión a MP3, extracción de metadatos)
 - **Gestionar una biblioteca musical** con metadatos
 - **Procesar listas de reproducción** de YouTube
+- **Consultar artistas** y sus canciones
 
 La aplicación utiliza herramientas como **yt-dlp** para descargar contenido y **ffmpeg** para el procesamiento de audio.
 
 ## 🛠️ Tecnologías
 
-- **Lenguaje**: Java 21
-- **Framework**: Spring Boot 4.0.5
+- Java 21
+- Spring Boot 4.0.5
+- Spring Web MVC + Spring Data JPA
 - **Base de datos**: PostgreSQL
 - **Procesamiento de audio**: ffmpeg, yt-dlp
+- **Lectura de metadatos MP3**: mp3agic
 - **Construcción**: Maven
 
 ## 🚀 Instalación y Uso
@@ -92,7 +95,7 @@ services:
       - D:/docker/eco/data/postgres:/var/lib/postgresql/data
 
   eco-backend:
-    image: eco-backend:latest
+    image: jorgezarzuelo/eco-backend:latest
     restart: unless-stopped
     environment:
       DB_URL: jdbc:postgresql://db:5432/eco
@@ -122,15 +125,23 @@ src/
 │   │   └── EcoBackendApplication.java
 │   └── resources/
 │       └── application.properties
-└── test/
-    └── java/
 ```
 
 ## 🔌 Endpoints Principales
 
-- `GET /songs` - Obtener lista de canciones
-- `POST /download` - Descargar canción desde YouTube
-- `GET /songs/{id}` - Obtener detalles de una canción
+- `GET /api/songs` - Obtener lista de canciones
+- `GET /api/songs/{id}` - Obtener detalles de una canción
+- `GET /api/songs/{id}/stream` - Stream MP3 por rangos (HTTP Range)
+- `GET /api/songs/{id}/cover` - Obtener portada embebida del MP3
+- `POST /api/download?url={youtube_url}` - Descargar canción/lista desde YouTube y procesar
+- `GET /api/artists` - Obtener lista de artistas
+- `GET /api/artists/{id}` - Obtener detalle de artista y canciones asociadas
+
+### DTOs principales añadidos para artistas
+
+- `ArtistListDto`: `id`, `name`
+- `ArtistDetailDto`: `id`, `name`, `songs[]`
+- `ArtistSongDto`: `id`, `title`, `album`
 
 ## 📝 Configuración de la Base de Datos
 
@@ -143,6 +154,12 @@ spring.datasource.url=jdbc:postgresql://localhost:5432/eco
 spring.datasource.username=eco
 spring.datasource.password=eco
 ```
+
+### Notas del modelo de artistas y canciones
+
+- Relación `ManyToMany` entre canciones y artistas (`song_artist`).
+- Cada canción guarda también un `mainArtist` para búsquedas/deduplicación rápida.
+- Detección de duplicados por `title + mainArtist`.
 
 ## 🔧 Requisitos del Contenedor
 
