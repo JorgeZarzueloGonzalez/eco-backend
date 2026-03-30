@@ -2,7 +2,6 @@ package es.jorgezarzuelo.eco_backend.service;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import es.jorgezarzuelo.eco_backend.dto.album.AlbumSummaryDto;
