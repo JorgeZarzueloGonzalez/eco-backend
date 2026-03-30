@@ -19,7 +19,7 @@ La aplicación utiliza herramientas como **yt-dlp** para descargar contenido y *
 - Java 21
 - Spring Boot 4.0.5
 - Spring Web MVC + Spring Data JPA
-- **Base de datos**: PostgreSQL
+- **Base de datos**: PostgreSQL/MYSQL
 - **Procesamiento de audio**: ffmpeg, yt-dlp
 - **Lectura de metadatos MP3**: mp3agic
 - **Construcción**: Maven
@@ -63,10 +63,10 @@ Cuando ejecutes el contenedor Docker, puedes configurar las siguientes variables
 docker run -d \
   -e APP_LIBRARY_PATH=/app/music/library \
   -e APP_RAW_PATH=/app/music/raw \
-  -e DB_URL=jdbc:postgresql://postgres:5432/eco_db \
+  -e DB_URL=jdbc:mysql://mysql:3306/eco_db \
   -e DB_USER=admin \
   -e DB_PASS=securepassword \
-  -e DB_TYPE=org.postgresql.Driver \
+  -e DB_TYPE=com.mysql.cj.jdbc.Driver \
   -p 8080:8080 \
   -v /data/music/library:/app/music/library \
   -v /data/music/raw:/app/music/raw \
