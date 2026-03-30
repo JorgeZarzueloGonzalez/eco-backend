@@ -9,18 +9,18 @@ import org.springframework.web.bind.annotation.RestController;
 import es.jorgezarzuelo.eco_backend.service.YoutubeDownloadService;
 
 @RestController
-@RequestMapping("/download")
+@RequestMapping("/api/download")
 public class DownloadController {
 
-    private final YoutubeDownloadService service;
+    private final YoutubeDownloadService youtubeDownloadService;
 
-    public DownloadController(YoutubeDownloadService service) {
-        this.service = service;
+    public DownloadController(YoutubeDownloadService youtubeDownloadService) {
+        this.youtubeDownloadService = youtubeDownloadService;
     }
 
     @PostMapping
     public ResponseEntity<String> download(@RequestParam String url) throws Exception {
 
-        return ResponseEntity.ok(service.downloadMp3(url));
+        return ResponseEntity.ok(youtubeDownloadService.downloadMp3(url));
     }
 }

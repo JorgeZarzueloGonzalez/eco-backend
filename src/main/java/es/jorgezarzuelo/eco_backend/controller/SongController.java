@@ -31,13 +31,13 @@ import java.nio.file.Paths;
 import java.util.List;
 
 @RestController
-@RequestMapping("/song")
+@RequestMapping("/api/songs")
 public class SongController {
 
     @Value("${app.library.path}")
     private String libraryPath;
 
-    private SongService songService;
+    private final SongService songService;
 
     public SongController(SongService songService) {
         this.songService = songService;
