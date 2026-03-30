@@ -74,7 +74,7 @@ docker run -d \
   -v /data/music/library:/app/music/library \
   -v /data/music/raw:/app/music/raw \
   -v /data/music/covers:/app/music/covers \
-  eco-backend:latest
+  jorgezarzuelo/eco-backend:latest
 ```
 
 ### Ejemplo: Docker Compose (PostgreSQL + backend)
