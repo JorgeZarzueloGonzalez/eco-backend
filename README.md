@@ -102,7 +102,6 @@ services:
     image: jorgezarzuelo/eco-backend:latest
     restart: unless-stopped
     environment:
-      APP_COVER_PATH: /app/music/covers
       DB_URL: jdbc:postgresql://db:5432/eco
       DB_USER: eco
       DB_PASS: eco
